@@ -1,0 +1,1 @@
+Simple EPub reader for FirefoxOS

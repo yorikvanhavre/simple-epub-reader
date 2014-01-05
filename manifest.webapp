@@ -1,0 +1,22 @@
+{
+  "name": "Simple Epub Viewer",
+  "description": "Simple epub reader for FirefoxOS",
+  "type" : "privileged",
+  "launch_path": "/index.html",
+  "version": "1.1",
+  "icons": {
+    "128": "/images/icon128.png",
+    "64": "/images/icon64.png"
+  },
+  "developer": {
+    "name": "Yorik van Havre",
+    "url": "http://yorik.uncreated.net"
+  },
+  "permissions": {
+    "device-storage:sdcard": {
+      "description" : "To allow reading epub files from SDCARD",
+      "access": "readonly"
+    }
+  },
+  "default_locale": "en"
+}

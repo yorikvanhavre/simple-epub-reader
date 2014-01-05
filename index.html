@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8" />
+		<title>Simple Epub Reader</title>
+
+		<script src="js/zip.js"></script>
+		<script src="js/monocore.js"></script>
+		<script src="js/monoctrl.js"></script>
+		<script src="js/efm.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="css/monocore.css" />
+		<link rel="stylesheet" type="text/css" href="css/monoctrl.css" />
+		<link rel="stylesheet" type="text/css" href="css/engine.css" />
+		<link rel="stylesheet" type="text/css" href="css/headers.css" />
+		<link rel="stylesheet" type="text/css" href="css/buttons.css" />
+		<link rel="stylesheet" type="text/css" href="css/lists.css" />
+		<link rel="stylesheet" type="text/css" href="css/settings_icons.css" />
+
+	</head>
+
+<body>
+	<div id="toolbar"></div>
+
+	<section role="region" id="reader" data-position="current">
+		<header class="fixed">
+		    <menu type="toolbar">
+        		<a href="#" id="refreshBtn"><span class="icon settings-icon updateBalance">refresh</span></a>
+        	</menu>
+			<h1>Simple Epub Reader</h1>
+		</header>
+		<section data-type="list" id="reader">
+			<header>Available Ebooks:</header>
+			<ul id="item-list"><li><p>Press the "refresh" button</p></ul>
+		</section>
+	</section>
+
+	<script type="text/javascript" defer src="js/jquery.min.js"></script>
+	<script type="text/javascript" defer src="js/engine.js"></script>
+
+</body>
+</html>
