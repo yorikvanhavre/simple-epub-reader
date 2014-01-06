@@ -25,14 +25,18 @@ function addToList(file) {
     }  
 }
 
-// Creates an EPUB object from a filename
+// Creates an EPUB object from a file on the sdcard
 function createEpub(filename) {
+    $("#list").hide();
+    $("#reader").show();
+    $("#reader").html('<p>Opening ebook...</p>');
+    $("#header").hide();
     var epubfile = sdcard.get(filename);
     ok = false;
     epubfile.onsuccess = function() {
         if (ok == false) {
             var file = this.result;
-            new Epub(file, dummy);
+            new Epub(file, createReader);
             //$("#item-list").append('<li><p>Successfully opened ebook</p></li>');
             ok = true;
         }
@@ -45,7 +49,12 @@ function createEpub(filename) {
 // This will be called when the Epub object is fully initialized and
 // ready to get passed to the Monocle.Reader.
 function createReader(bookData) {
-    $("#item-list").append('<li><p>createReader</p></li>');
+    //$("#reader").html('<p>Creating reader...</p>');
+    $("#reader").append('<p>Creating reader...</p>');
+    $("#title").addClass("skin-organic");
+    
+    //Monocle.Reader("reader",bookData);
+
     Monocle.Reader("reader", bookData,  // The id of the reader element and the book data.
         { flipper: Monocle.Flippers.Instant,  // The rest is just fanciness:
           panels: Monocle.Panels.Magic },     // No animation and click anywhere
@@ -63,12 +72,9 @@ function createReader(bookData) {
 function createBookTitle(reader, contactListeners) {
     var bt = {}
     bt.createControlElements = function () {
-        cntr = document.createElement('div');
-        cntr.className = "bookTitle";
-        runner = document.createElement('div');
-        runner.className = "runner";
-        runner.innerHTML = reader.getBook().getMetaData('title');
-        cntr.appendChild(runner);
+        cntr = document.createElement('h3');
+        cntr.id = "bookTitle";
+        cntr.innerHTML = reader.getBook().getMetaData('title');
         if (contactListeners) {
             Monocle.Events.listenForContact(cntr, contactListeners);
         }
@@ -78,59 +84,87 @@ function createBookTitle(reader, contactListeners) {
     return bt;
 }
 
+// if sdcard is not available (we are not on firefoxOS), show file dialog
+function showUploader() {
+    $("#item-list").append('<li id="Message"><p>Select a file to upload:</p></li>');
+    $("#item-list").append('<li><p><input type="file" id="file" accept="application/epub+zip" onchange="fileSelected(event)" /></p></li>');
+}
+
+// An event handler for our file input.
+function fileSelected(event) {
+    var files = event.target.files;
+    if (files.length > 0)
+        $("#list").hide();
+        $("#reader").show();
+        $("#reader").html('<p>Opening ebook...</p>');
+        $("#header").hide();
+        new Epub(files[0], createReader);
+}
+
 // This is the "start" function
 (function () {
 
-    sdcard = navigator.getDeviceStorage("sdcard");
+    if (navigator.getDeviceStorage) {
 
-    refreshBtn = document.querySelector("#refreshBtn");
-    refreshBtn.addEventListener ('click', function () {
-      load();
-    });
+        sdcard = navigator.getDeviceStorage("sdcard");
 
-    load();
+        $("#reader").hide();
 
-    function load(){
-        console.log("loading files");
-        $('#item-list li').remove();
-        $("#item-list").append('<li id="Message"><p>Searching for Ebooks...</p></li>');
-        var all_files = sdcard.enumerate("");
-        flagError = true;
-        flagOk = true;
-        all_files.onsuccess = function() {
-            while (all_files.result) {
-                var each_file = all_files.result;
-                addToList(each_file);
-                all_files.continue();
-            }
-            
-            if($('li').size() == 0){
-                if(flagError) {
-                    $("#item-list").append('<li id="Message"><p>No epub file found.</p></li>');
-                    flagError = false;
-                }
-            } else {
-                if(flagOk){
-                    flagOk = false;
-                    $("#Message").html('<p>Please choose an ebook to open:</p>');
-                }
-            }
-            $('#item-list li').click(function(){
-                //$("#item-list").append('<li><p>click</p></li>');
-                if ($(this).attr("id") != "Message"){
-                    var filename = $(this).attr("id");
-                    //flagOk = false;
-                    //$('#item-list li').remove();
-                    $("#item-list").html('<li id="Message"><p>Opening ebook...</p></li>');
-                    createEpub(filename);
-                }
-            });
-        };
-
-        all_files.onerror = function(){
-            console.log("error reading from sdcard");
+        function load(){
+            console.log("loading files");
             $('#item-list li').remove();
-            $("#item-list").append('<li id="Message"><p>Unable to access the sdcard.</p></li>');
+            $("#item-list").append('<li id="Message"><p>Searching for Ebooks...</p></li>');
+            var all_files = sdcard.enumerate("");
+            flagError = true;
+            flagOk = true;
+
+            all_files.onsuccess = function() {
+                while (all_files.result) {
+                    var each_file = all_files.result;
+                    addToList(each_file);
+                    all_files.continue();
+                }
+                
+                if($('li').size() == 0){
+                    if(flagError) {
+                        $("#item-list").append('<li id="Message"><p>No epub file found.</p></li>');
+                        flagError = false;
+                    }
+                } else {
+                    if(flagOk){
+                        flagOk = false;
+                        $("#Message").html('<p>Please choose an ebook to open:</p>');
+                    }
+                }
+                $('#item-list li').click(function(){
+                    //$("#item-list").append('<li><p>click</p></li>');
+                    if ($(this).attr("id") != "Message"){
+                        var filename = $(this).attr("id");
+                        //flagOk = false;
+                        //$('#item-list li').remove();
+                        createEpub(filename);
+                    }
+                });
+            };
+
+            all_files.onerror = function(){
+                console.log("error reading from sdcard");
+                $('#item-list li').remove();
+                $("#item-list").append('<li id="Message"><p>Unable to access the sdcard.</p></li>');
+                showUploader();
+            }
         }
+
+        refreshBtn = document.querySelector("#refreshBtn");
+        refreshBtn.addEventListener ('click', function () {
+          load();
+        });
+
+        load();
+
+    } else {
+        $('#item-list li').remove();
+        $("#item-list").append('<li id="Message"><p>No sdcard found.</p></li>');
+        showUploader();
     }
 })();

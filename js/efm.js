@@ -85,8 +85,8 @@ function Epub(epubfile, callback) {
         });
     }, console.error);
 
-    $("#item-list").append('<li><p>Unzipping contents...</p></li>');
-    
+    //$("#item-list").append('<li><p>Unzipping contents...</p></li>');
+    $("#reader").append('<p>Unzipping contents...</p></li>');
     // Find the location of the OPF file from container.xml
     findOPF = function (xml) {
         var doc = new DOMParser().parseFromString(xml, "text/xml");
@@ -245,7 +245,7 @@ function Epub(epubfile, callback) {
     // Note that (X|HT)ML files are parsed and URLs in <img> and <link>
     // to resouces in the Epub are replaced with data URLs.
     getComponent = function (id, callback) {
-        $("#item-list").append('<li><p>'+id+'</p></li>');
+        //$("#item-list").append('<li><p>'+id+'</p></li>');
         var reldir = getDir(id);
         var ext = id.split('.').slice(-1)[0];
         if (["html", "htm", "xhtml", "xml"].indexOf(ext) != -1) {

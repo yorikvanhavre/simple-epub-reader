@@ -22,19 +22,18 @@
 	</head>
 
 <body>
-	<div id="toolbar"></div>
-
-	<section role="region" id="reader" data-position="current">
-		<header class="fixed">
+	<section role="region" id="title" data-position="current">
+		<header id= "header" class="fixed">
 		    <menu type="toolbar">
         		<a href="#" id="refreshBtn"><span class="icon settings-icon updateBalance">refresh</span></a>
         	</menu>
 			<h1>Simple Epub Reader</h1>
 		</header>
-		<section data-type="list" id="reader">
+		<section data-type="list" id="list">
 			<header>Available Ebooks:</header>
 			<ul id="item-list"><li><p>Press the "refresh" button</p></ul>
 		</section>
+		<div id="reader"></div>
 	</section>
 
 	<script type="text/javascript" defer src="js/jquery.min.js"></script>
