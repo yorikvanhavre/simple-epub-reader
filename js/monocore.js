@@ -2454,7 +2454,7 @@ Monocle.Reader.DEFAULT_STYLE_RULES = Monocle.Formatting.DEFAULT_STYLE_RULES;
  */
 
 Monocle.Book = function (dataSource, preloadWindow) {
-
+  console.log("creating monocle object");
   var API = { constructor: Monocle.Book }
   var k = API.constants = API.constructor;
   var p = API.properties = {
@@ -2464,6 +2464,7 @@ Monocle.Book = function (dataSource, preloadWindow) {
     components: [],
     chapters: {} // flat arrays of chapters per component
   }
+  console.log("target:",preloadWindow);
 
 
   function initialize() {

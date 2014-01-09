@@ -35,8 +35,10 @@ function createEpub(filename) {
     ok = false;
     epubfile.onsuccess = function() {
         if (ok == false) {
+            console.log("opening file: "+filename);
             var file = this.result;
             new Epub(file, createReader);
+            //console.log("epub object: "+Epub);
             //$("#item-list").append('<li><p>Successfully opened ebook</p></li>');
             ok = true;
         }
@@ -52,9 +54,12 @@ function createReader(bookData) {
     //$("#reader").html('<p>Creating reader...</p>');
     $("#reader").append('<p>Creating reader...</p>');
     $("#title").addClass("skin-organic");
-    
-    //Monocle.Reader("reader",bookData);
 
+    console.log("bookdata: "+bookData);
+    
+    Monocle.Reader("reader",bookData);
+
+    /*
     Monocle.Reader("reader", bookData,  // The id of the reader element and the book data.
         { flipper: Monocle.Flippers.Instant,  // The rest is just fanciness:
           panels: Monocle.Panels.Magic },     // No animation and click anywhere
@@ -66,6 +71,7 @@ function createReader(bookData) {
             createBookTitle(reader, { start: function () { reader.showControl(toc); } });
           }
         );
+    */
 }
 
 // This adds the book title to the top of each page.
@@ -104,6 +110,8 @@ function fileSelected(event) {
 // This is the "start" function
 (function () {
 
+    console.log("simple epub reader starting")
+
     if (navigator.getDeviceStorage) {
 
         sdcard = navigator.getDeviceStorage("sdcard");
@@ -111,7 +119,7 @@ function fileSelected(event) {
         $("#reader").hide();
 
         function load(){
-            console.log("loading files");
+            console.log("loading files from sdcard");
             $('#item-list li').remove();
             $("#item-list").append('<li id="Message"><p>Searching for Ebooks...</p></li>');
             var all_files = sdcard.enumerate("");

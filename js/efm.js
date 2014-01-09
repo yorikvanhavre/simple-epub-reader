@@ -131,6 +131,8 @@ function Epub(epubfile, callback) {
                 spine.push(idmap[id]);
             }
             //$("#item-list").append('<li><p>spine</p></li>');
+
+            console.log("contents: "+spine);
             
             // Parse table of contents
             if (nav_href != null) {  // Epub3 navigation
